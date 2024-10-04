@@ -68,11 +68,15 @@ def most_watched_genre():
 
 def max_freq(arr):
     freq = {}
-    for  i in arr:
-        if(freq.get(i)):
+    try:
+
+        for  i in arr:
+            # if(freq.get(i)):
             freq[i] += 1
-        else:
-            freq[i] = 1
+    except:
+        pass
+        # else:
+        #     freq[i] = 1
 
     # [2,1,2,1,1]
     return freq
