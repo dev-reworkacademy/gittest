@@ -54,6 +54,40 @@ def create_user():
     data =  f"{name},{age},{gender},{genres}"
     save_customer_info("customers.csv",data)
 
+def get_most_watched_by_gender():
+
+    customers = read_file("customers.csv").split("\n")
+    male_genre = []
+    female_genre = []
+
+    for customer in customers:
+        if customer != "":
+            columns = customer.split(",")
+            
+            if columns[2].lower() == "m":
+                male_genre.append(customer)
+
+            if columns[2].lower() == "f":
+                female_genre.append(customer)
+
+    arr = []
+    for customer in male_genre:
+        columns = customer.split(",")
+        genre = columns[3].split("-")
+        arr.extend(genre)
+    
+    most_watched_by_male = max_freq(arr)
+
+    arr = []
+    for customer in female_genre:
+        columns = customer.split(",")
+        genre = columns[3].split("-")
+        arr.extend(genre)
+
+    most_watched_by_female = max_freq(arr)
+
+    return most_watched_by_male,most_watched_by_female
+
 
 def most_watched_genre():
     customers = read_file("customers.csv").split("\n")
@@ -64,25 +98,45 @@ def most_watched_genre():
             genre = columns[3].split("-")
             arr.extend(genre)
     
-    print(max_freq(arr))
+    return max_freq(arr)
 
 def max_freq(arr):
     freq = {}
-    try:
+    genres = []
 
+    try:
         for  i in arr:
-            # if(freq.get(i)):
-            freq[i] += 1
+            if freq.get(i):
+                freq[i] += 1
+            else:
+                freq[i] = 1
+            # this is simplified version of the algorithm above
+            # freq[i] = freq.get(i,0) + 1
     except:
         pass
-        # else:
-        #     freq[i] = 1
 
+    values = freq.values()
+    max_value = max(values)
+
+    for key,value in freq.items():
+        if(value == max_value):
+            genres.append(key)
     # [2,1,2,1,1]
-    return freq
+    return genres
+
 
 def analyze():
-    most_watched_genre()
+    most_watched = ','.join(most_watched_genre())
+    print(f"Most watched genre: {most_watched}")
+
+    male_value,female_value = get_most_watched_by_gender()
+    male_genre = ','.join(male_value)
+    female_genre = ','.join(female_value)
+
+    print(f"Most watched genre by male: {male_genre}")
+    print(f"Most watched genre by female: {female_genre}")
+
+    get_most_watched_by_gender()
     
 
 def display():
